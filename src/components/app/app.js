@@ -7,6 +7,8 @@ import React from "react";
 const minute = 60000;
 
 export default class App extends React.Component {
+  count = 1000;
+
   state = {
     todoData: [
       {
@@ -28,6 +30,23 @@ export default class App extends React.Component {
         completed: false,
       },
     ],
+    filterType: "all",
+  };
+
+  addTask = (description) => {
+    this.setState((state) => {
+      return {
+        todoData: [
+          ...state.todoData,
+          {
+            id: this.count++,
+            description: description,
+            created: new Date(Date.now()),
+            completed: false,
+          },
+        ],
+      };
+    });
   };
 
   removeTask = (id) => {
@@ -36,16 +55,55 @@ export default class App extends React.Component {
     });
   };
 
+  removeCompletedTasks = () => {
+    this.setState((state) => {
+      return { todoData: state.todoData.filter((x) => !x.completed) };
+    });
+  };
+
+  toggleComplete = (id) => {
+    this.setState((oldState) => {
+      const idx = oldState.todoData.findIndex((x) => x.id === id);
+
+      const newItem = Object.assign({}, oldState.todoData[idx]);
+      newItem.completed = !newItem.completed;
+
+      return {
+        todoData: [
+          ...oldState.todoData.slice(0, idx),
+          newItem,
+          ...oldState.todoData.slice(idx + 1),
+        ],
+      };
+    });
+  };
+
+  changeFilterType = (type) => {
+    this.setState({ ...this.state, filterType: type });
+  };
+
   render() {
+    let todos = this.state.todoData;
+    if (this.state.filterType === "active")
+      todos = todos.filter((x) => !x.completed);
+    if (this.state.filterType === "completed")
+      todos = todos.filter((x) => x.completed);
     return (
       <section className="todoapp">
-        <AppHeader />
+        <AppHeader addTask={this.addTask.bind(this)} />
         <section className="main">
-          <TaskList todos={this.state.todoData} removeTask={this.removeTask} />
-          <Footer />
+          <TaskList
+            todos={todos}
+            removeTask={this.removeTask}
+            toggleComplete={this.toggleComplete}
+          />
+          <Footer
+            todoCount={this.state.todoData.filter((x) => !x.completed).length}
+            removeCompletedTasks={this.removeCompletedTasks}
+            changeFilterType={this.changeFilterType.bind(this)}
+            filterType={this.state.filterType}
+          />
         </section>
-        {/* <SearchPanel />
-        <TodoList todos={todoData} /> */}
       </section>
     );
   }
