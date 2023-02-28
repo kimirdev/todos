@@ -1,10 +1,16 @@
 import React from "react";
+import PropTypes from "prop-types";
 import "./new-task-form.css";
 
 class NewTaskForm extends React.Component {
   state = {
     inputVal: "",
   };
+
+  static propTypes = {
+    addTask: PropTypes.func,
+  };
+
   onInputChange = (e) => {
     this.setState({ inputVal: e.currentTarget.value });
   };

@@ -1,6 +1,7 @@
 import React from "react";
 import "./footer.css";
 import TasksFilter from "../task-filter";
+import PropTypes from "prop-types";
 
 const Footer = ({
   todoCount,
@@ -20,6 +21,13 @@ const Footer = ({
       </button>
     </footer>
   );
+};
+
+Footer.propTypes = {
+  todoCount: PropTypes.number,
+  removeCompletedTasks: PropTypes.func,
+  changeFilterType: PropTypes.func,
+  filterType: PropTypes.oneOf(["all", "active", "completed"]),
 };
 
 export default Footer;

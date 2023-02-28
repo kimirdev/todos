@@ -1,5 +1,6 @@
 import React from "react";
 import "./tasks-filter.css";
+import PropTypes from "prop-types";
 
 const TasksFilter = ({ changeFilterType, filterType }) => {
   return (
@@ -30,6 +31,11 @@ const TasksFilter = ({ changeFilterType, filterType }) => {
       </li>
     </ul>
   );
+};
+
+TasksFilter.propTypes = {
+  changeFilterType: PropTypes.func,
+  filterType: PropTypes.oneOf(["all", "completed", "active"]),
 };
 
 export default TasksFilter;

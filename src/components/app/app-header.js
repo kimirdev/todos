@@ -1,5 +1,6 @@
 import React from "react";
 import NewTaskForm from "../new-task-form";
+import PropTypes from "prop-types";
 
 const AppHeader = ({ addTask }) => {
   return (
@@ -10,4 +11,7 @@ const AppHeader = ({ addTask }) => {
   );
 };
 
+AppHeader.propTypes = {
+  addTask: PropTypes.func,
+};
 export default AppHeader;
