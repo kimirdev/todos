@@ -1,17 +1,18 @@
-import React from "react";
-import NewTaskForm from "../new-task-form";
-import PropTypes from "prop-types";
+import React from 'react'
+import PropTypes from 'prop-types'
 
-const AppHeader = ({ addTask }) => {
+import NewTaskForm from '../new-task-form'
+
+function AppHeader({ addTask }) {
   return (
     <header className="header">
       <h1>todos</h1>
       <NewTaskForm addTask={addTask} />
     </header>
-  );
-};
+  )
+}
 
 AppHeader.propTypes = {
-  addTask: PropTypes.func,
-};
-export default AppHeader;
+  addTask: PropTypes.func.isRequired,
+}
+export default AppHeader
