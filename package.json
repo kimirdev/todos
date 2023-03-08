@@ -57,6 +57,6 @@
     "prettier": "2.8.4"
   },
   "lint-staged": {
-    "*": "node_modules/.bin/eslint --fix"
+    "*.js": "node_modules/.bin/eslint --fix"
   }
 }

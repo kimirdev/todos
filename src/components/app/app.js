@@ -53,6 +53,7 @@ export default class App extends React.Component {
   render() {
     let { todoData } = this.state
     const { filterType } = this.state
+    const todoCount = todoData.filter((x) => !x.completed).length
     if (filterType === 'active') todoData = todoData.filter((x) => !x.completed)
     if (filterType === 'completed') todoData = todoData.filter((x) => x.completed)
     return (
@@ -61,7 +62,7 @@ export default class App extends React.Component {
         <section className="main">
           <TaskList todos={todoData} removeTask={this.removeTask} toggleComplete={this.toggleComplete} />
           <Footer
-            todoCount={todoData.filter((x) => !x.completed).length}
+            todoCount={todoCount}
             removeCompletedTasks={this.removeCompletedTasks}
             changeFilterType={this.changeFilterType}
             filterType={filterType}
