@@ -3,12 +3,9 @@ import './task.css'
 import { formatDistanceToNow } from 'date-fns'
 import PropTypes from 'prop-types'
 
-function Task({ id, description, created, completed, removeTask, toggleComplete }) {
-  // const handleKeyDown = (e) => {
-  //   if (e.repeat) return
-  //   if (e.code === 'Space') toggleComplete(id)
-  // }
+import Timer from '../timer'
 
+function Task({ id, description, created, seconds, completed, removeTask, toggleComplete, changeSeconds }) {
   return (
     <div className="view">
       <input
@@ -19,8 +16,9 @@ function Task({ id, description, created, completed, removeTask, toggleComplete 
         onKeyDown={() => {}}
       />
       <div className="label">
-        <span className="description">{description}</span>
-        <span className="created">created {formatDistanceToNow(created, { addSuffix: true })}</span>
+        <span className="title">{description}</span>
+        <Timer id={id} seconds={seconds} changeSeconds={changeSeconds} />
+        <span className="description">created {formatDistanceToNow(created, { addSuffix: true })}</span>
       </div>
       {/* <button className="icon icon-edit"></button> */}
       <button type="button" className="icon icon-destroy" aria-label="remove" onClick={() => removeTask(id)} />

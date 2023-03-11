@@ -7,6 +7,8 @@ class NewTaskForm extends React.Component {
     super(props)
     this.state = {
       inputVal: '',
+      seconds: '',
+      minutes: '',
     }
   }
 
@@ -14,25 +16,31 @@ class NewTaskForm extends React.Component {
     this.setState({ inputVal: e.currentTarget.value })
   }
 
+  onMinutesChange = (e) => {
+    this.setState({ minutes: e.currentTarget.value })
+  }
+
+  onSecondsChange = (e) => {
+    this.setState({ seconds: e.currentTarget.value })
+  }
+
   onFormSubmit = (e) => {
     const { addTask } = this.props
-    const { inputVal } = this.state
+    const { inputVal, seconds, minutes } = this.state
     e.preventDefault()
     if (inputVal === '') return
-    addTask(inputVal)
-    this.setState({ inputVal: '' })
+    addTask(inputVal, Number(minutes) * 60 + Number(seconds))
+    this.setState({ inputVal: '', seconds: '', minutes: '' })
   }
 
   render() {
-    const { inputVal } = this.state
+    const { inputVal, seconds, minutes } = this.state
     return (
-      <form onSubmit={this.onFormSubmit}>
-        <input
-          className="new-todo"
-          placeholder="What needs to be done?"
-          onChange={this.onInputChange}
-          value={inputVal}
-        />
+      <form onSubmit={this.onFormSubmit} style={{ display: 'flex' }}>
+        <input className="new-todo" placeholder="Task" onChange={this.onInputChange} value={inputVal} />
+        <input className="new-todo" type="number" placeholder="Min" onChange={this.onMinutesChange} value={minutes} />
+        <input className="new-todo" type="number" placeholder="Sec" onChange={this.onSecondsChange} value={seconds} />
+        <button type="submit" aria-label="submit" />
       </form>
     )
   }

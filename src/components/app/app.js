@@ -19,9 +19,12 @@ export default class App extends React.Component {
     this.changeFilterType.bind(this)
   }
 
-  addTask = (description) => {
+  addTask = (description, seconds) => {
     this.setState((state) => ({
-      todoData: [...state.todoData, { id: this.count, description, created: new Date(Date.now()), completed: false }],
+      todoData: [
+        ...state.todoData,
+        { id: this.count, description, seconds, created: new Date(Date.now()), completed: false },
+      ],
     }))
     this.count += 1
   }
@@ -50,6 +53,18 @@ export default class App extends React.Component {
     this.setState((state) => ({ ...state, filterType: type }))
   }
 
+  changeSeconds = (id, seconds) => {
+    this.setState((state) => {
+      const idx = state.todoData.findIndex((x) => x.id === id)
+      const newItem = { ...state.todoData[idx] }
+      newItem.seconds = seconds
+      return {
+        ...state,
+        todoData: [...state.todoData.slice(0, idx), newItem, ...state.todoData.slice(idx + 1)],
+      }
+    })
+  }
+
   render() {
     let { todoData } = this.state
     const { filterType } = this.state
@@ -60,7 +75,12 @@ export default class App extends React.Component {
       <section className="todoapp">
         <AppHeader addTask={this.addTask} />
         <section className="main">
-          <TaskList todos={todoData} removeTask={this.removeTask} toggleComplete={this.toggleComplete} />
+          <TaskList
+            todos={todoData}
+            removeTask={this.removeTask}
+            toggleComplete={this.toggleComplete}
+            changeSeconds={this.changeSeconds}
+          />
           <Footer
             todoCount={todoCount}
             removeCompletedTasks={this.removeCompletedTasks}

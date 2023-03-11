@@ -5,7 +5,7 @@ import Task from '../task'
 
 import './task-list.css'
 
-function TaskList({ todos, removeTask, toggleComplete }) {
+function TaskList({ todos, removeTask, toggleComplete, changeSeconds }) {
   return (
     <ul className="todo-list">
       {todos.map((todo) => {
@@ -16,9 +16,11 @@ function TaskList({ todos, removeTask, toggleComplete }) {
               id={todo.id}
               description={todo.description}
               created={todo.created}
+              seconds={todo.seconds}
               completed={todo.completed}
               removeTask={removeTask}
               toggleComplete={toggleComplete}
+              changeSeconds={changeSeconds}
             />
           </li>
         )
