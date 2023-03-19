@@ -1,65 +1,49 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-class Timer extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      intervalIdx: null,
-      paused: true,
-      totalSecs: props.seconds,
-    }
-  }
+function Timer({ id, seconds, changeSeconds }) {
+  const [paused, setPaused] = useState(true)
+  const [totalSecs, setTotalSecs] = useState(seconds)
 
-  componentWillUnmount() {
-    const { intervalIdx } = this.state
-    clearInterval(intervalIdx)
-  }
+  const intervalId = useRef()
 
-  togglePlayButton = () => {
-    const { paused, totalSecs, intervalIdx } = this.state
-    const { id, changeSeconds } = this.props
+  useEffect(() => () => clearInterval(intervalId.current), [])
 
-    let iid
-
+  const togglePlayButton = () => {
     if (paused && totalSecs > 0) {
-      iid = setInterval(() => {
-        const { totalSecs: sec } = this.state
-        if (sec < 1) {
-          clearInterval(intervalIdx)
-          this.setState({ totalSecs: 0, paused: true, intervalIdx: null })
+      intervalId.current = setInterval(() => {
+        if (totalSecs < 1) {
+          setPaused(true)
+          setTotalSecs(0)
           changeSeconds(id, 0)
+          clearInterval(intervalId.current)
           return
         }
-        this.setState((state) => ({ ...state, totalSecs: state.totalSecs - 1 }))
+        setTotalSecs((s) => s - 1)
       }, 1000)
     } else {
       changeSeconds(id, totalSecs)
-      clearInterval(intervalIdx)
-      iid = null
+      clearInterval(intervalId.current)
     }
-    this.setState((state) => ({ ...state, paused: !state.paused, intervalIdx: iid }))
+    setPaused((s) => !s)
   }
 
-  render() {
-    const { totalSecs, paused } = this.state
-    const mins = Math.floor(totalSecs / 60)
-    const secs = totalSecs % 60
+  const mins = Math.floor(totalSecs / 60)
+  const secs = totalSecs % 60
 
-    const button = paused ? (
-      <button type="button" className="icon icon-play" aria-label="play" onClick={this.togglePlayButton} />
-    ) : (
-      <button type="button" className="icon icon-pause" aria-label="pause" onClick={this.togglePlayButton} />
-    )
-    return (
-      <span className="description">
-        <span>
-          {button}
-          {`${mins.toLocaleString('en-US', { minimumIntegerDigits: 2 })}:` +
-            `${secs.toLocaleString('en-US', { minimumIntegerDigits: 2 })}`}
-        </span>
+  return (
+    <span className="description">
+      <span>
+        <button
+          type="button"
+          className={`icon icon-${paused ? 'play' : 'pause'}`}
+          aria-label="play"
+          onClick={togglePlayButton}
+        />
+        {`${mins.toLocaleString('en-US', { minimumIntegerDigits: 2 })}:` +
+          `${secs.toLocaleString('en-US', { minimumIntegerDigits: 2 })}`}
       </span>
-    )
-  }
+    </span>
+  )
 }
 
 export default Timer
